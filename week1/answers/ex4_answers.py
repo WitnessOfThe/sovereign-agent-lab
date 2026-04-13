@@ -20,7 +20,7 @@ EX4_EXPERIMENT_DONE = True   # True or False
 
 # What changed, and which files did or didn't need updating? Min 30 words.
 EX4_EXPERIMENT_RESULT = """
-Changing The Albanach's status from 'available' to 'full' in mcp_venue_server.py caused it to drop out of the Query 1 search results immediately: the baseline returned count=2 (The Albanach and The Haymarket Vaults), the experiment returned count=1 (The Haymarket Vaults only). The agent's final answer changed accordingly — it reported only The Haymarket Vaults. Query 2 was unaffected (still count=0, no venue holds 300). exercise4_mcp_client.py was not touched at any point: the client discovers tools and data dynamically on every connection, so a server-side data change is reflected in the next run with zero client code changes.
+Changing The Albanach's status from 'available' to 'full' in mcp_venue_server.py caused it to drop out of the Query 1 search results: the baseline returned count=2 (The Albanach and The Haymarket Vaults), the experiment returned count=1 (The Haymarket Vaults only). The agent's final answer changed accordingly — it reported only The Haymarket Vaults. Query 2 was unaffected (still count=0, no venue holds 300). exercise4_mcp_client.py was not touched at any point: the client discovers tools and data dynamically on every connection, so a server-side data change is reflected in the next run with zero client code changes.
 """
 
 # ── MCP vs hardcoded ───────────────────────────────────────────────────────
@@ -30,7 +30,7 @@ LINES_OF_TOOL_CODE_EX4 = 49  # count in exercise4_mcp_client.py (_make_mcp_calle
 
 # What does MCP buy you beyond "the tools are in a separate file"? Min 30 words.
 MCP_VALUE_PROPOSITION = """
-MCP gives you runtime tool discovery over a transport boundary: the client has no knowledge of what tools exist until it connects and calls list_tools(). This means any MCP-compatible client — the LangGraph agent, a Rasa action server, a different language entirely — can connect to the same server and get the same tools without sharing code. Adding a new tool to mcp_venue_server.py is immediately available to every client on the next connection, with no redeploy or code change on any client. That is the key difference from "tools in a separate file": a separate file is still compiled into the client; an MCP server is a live service boundary.
+MCP gives you runtime tool discovery over a transport boundary: the client has no knowledge of what tools exist until it connects and calls list_tools(). This means any MCP-compatible client — the LangGraph agent, a Rasa action server, a different language entirely — can connect to the same server and get the same tools without sharing code. Adding a new tool to mcp_venue_server.py is available to every client on the next connection, with no redeploy or code change on any client. That is the key difference from "tools in a separate file": a separate file is still compiled into the client; an MCP server is a live service boundary.
 """
 
 # ── PyNanoClaw architecture — SPECULATION QUESTION ─────────────────────────

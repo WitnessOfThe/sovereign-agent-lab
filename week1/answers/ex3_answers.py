@@ -93,7 +93,7 @@ CALM triggered the handle_out_of_scope flow, replied that it cannot help with pa
 # Compare Rasa CALM's handling of the out-of-scope request to what
 # LangGraph did in Exercise 2 Scenario 3. Min 40 words.
 OUT_OF_SCOPE_COMPARISON = """
-Rasa CALM handled the out-of-scope request much cleaner and explicit: it triggered a dedicated handle_out_of_scope flow, gave a clear refusal with a reason, and offered to resume the booking. LangGraph in Scenario 3 responded with weak "lacking necessary details" message that did not explain it was out of scope and gave no useful guidance.
+Both agents handled out-of-scope cleanly, but the mechanism is very different. Rasa CALM triggered a named handle_out_of_scope flow with a fixed utterance and then explicitly offered to resume the active booking flow ("Would you like to continue with confirm booking?"), so the behaviour is deterministic and auditable. LangGraph's Scenario 3 produced a similarly polite refusal with external resource suggestions, but it was ad-hoc LLM prose with no flow-resumption mechanism — if the user had said "yes, continue" there would be nothing structured to return to.
 """
 
 # ── Task B: Cutoff guard ───────────────────────────────────────────────────
@@ -116,5 +116,5 @@ CALM_VS_OLD_RASA = """
 # ── The setup cost ─────────────────────────────────────────────────────────
 
 SETUP_COST_VALUE = """
-Setup provides guaranteed, auditable behavior, which is something that we expect from the prod systems.
+The setup cost buys guaranteed, auditable behaviour — something we need from production systems that take legally or financially binding actions. Writing flows.yml, domain.yml and one Python action is more upfront work than a ReAct prompt, but in return the business rules (deposit limit, capacity ceiling, cutoff time) live in Python and cannot be talked around, the dialogue paths are named and reviewable, and out-of-scope handling is explicit rather than emergent. For Rod's booking agent, where a wrong confirmation has real consequences, that trade-off is clearly worth paying.
 """

@@ -77,7 +77,7 @@ The agent's control flow was unaffected because generate_event_flyer encapsulate
 # Scenario 1: first choice unavailable
 # Quote the specific message where the agent changed course. Min 20 words.
 SCENARIO_1_PIVOT_MOMENT = """
-The tool result, not a spoken message, triggered the pivot: '{"pub_name": "The Bow Bar", "capacity": 80, "status": "full", "meets_all_constraints": false}'. The agent produced no explicit reasoning step — it silently moved to the next candidate and immediately called check_pub_availability for The Albanach with required_capacity=160 and requires_vegan=true.
+The tool result, not a spoken message, triggered the pivot: '{"success": true, "pub_name": "The Bow Bar", "address": "80 West Bow, Edinburgh", "capacity": 80, "vegan": true, "status": "full", "meets_all_constraints": false}'. The agent produced no explicit reasoning step — it silently moved to the next candidate and immediately called check_pub_availability for The Albanach with required_capacity=160 and requires_vegan=true.
 """
 
 SCENARIO_1_FALLBACK_VENUE = "The Albanach"
@@ -88,7 +88,13 @@ SCENARIO_2_HALLUCINATED = False   # True or False
 
 # Paste the final [AI] message.
 SCENARIO_2_FINAL_ANSWER = """
-None of the known venues meet the capacity and dietary requirements. The Albanach, The Haymarket Vaults, and The Guilford Arms have a capacity of 180, 160, and 200 respectively, which is less than the required capacity of 300. The Bow Bar has a capacity of 80, which is also less than the required capacity, and it is currently full. Therefore, none of the known venues can accommodate 300 people with vegan options.
+None of the known Edinburgh venues can accommodate 300 people with vegan options. The maximum capacities are:
+- The Albanach: 180 (vegan available)
+- The Haymarket Vaults: 160 (vegan available)
+- The Guilford Arms: 200 (no vegan)
+- The Bow Bar: 80 (vegan available, currently full)
+
+Would you like me to suggest alternative solutions or check other types of venues?
 """
 
 # Scenario 3: out of scope (train times)
@@ -97,11 +103,11 @@ SCENARIO_3_TRIED_A_TOOL = False   # True or False
 
 SCENARIO_3_RESPONSE = """
 I don't have access to real-time train schedules or transportation data. For the most accurate information about the last train from Edinburgh Waverley to London, I recommend checking:
-1. The ScotRail website/app
-2. National Rail Enquiries (www.nationalrail.co.uk)
-3. Train service operator's official platform
+1. The National Rail website (https://www.nationalrail.co.uk)
+2. Train service apps like Citymapper or Trainline
+3. The specific train operator's website (e.g., LNER)
 
-Would you like help with anything related to Edinburgh pubs, weather, event planning, or catering calculations?
+Would you like help with anything related to Edinburgh pubs, weather, or event planning instead?
 """
 
 # Would this behaviour be acceptable in a real booking assistant? Min 30 words.

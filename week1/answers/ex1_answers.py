@@ -52,7 +52,7 @@ As all answers are correct, no distractors were able to confuse the model, which
 # Check outputs/ex1_results.json → "part_c_was_run"
 PART_C_WAS_RUN = True   # True or False
 
-PART_C_PLAIN_ANSWER    = "The Haymarket Vaults"
+PART_C_PLAIN_ANSWER    = "Haymarket Vaults"
 PART_C_XML_ANSWER      = "The Haymarket Vaults"
 PART_C_SANDWICH_ANSWER = "The Haymarket Vaults"
 
@@ -67,5 +67,5 @@ In this experiment, we see the same answer in all three format cases, but surpri
 # "Context formatting matters most when..."
 
 CORE_LESSON = """
-In the current experiment set-up we weren't able to observe model distractions. Possibly, adding more noise to the prompt, making the context bigger, or using an even smaller model can provide the intended distraction effects that would show where "lost in the middle" or formatting sensitivity truly starts to matter.
+Context formatting matters most when the signal-to-noise ratio is low — long contexts, many near-miss distractors, or weaker models. In the current experiment set-up we weren't able to observe that regime: the dataset is short and even the 2B model got it right. Possibly, adding more noise to the prompt, making the context bigger, or using an even smaller model would provide the intended distraction effects that would show where "lost in the middle" or formatting sensitivity truly starts to matter.
 """
