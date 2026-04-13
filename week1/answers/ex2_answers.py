@@ -24,18 +24,47 @@ TASK_A_CATERING_COST_GBP = 0.0
 # Did the weather tool return outdoor_ok = True or False?
 TASK_A_OUTDOOR_OK = None
 
+# Optional — anything unexpected.
+# If you used a non-default model via RESEARCH_MODEL env var, note it here.
+# Example: "Used nvidia/nemotron-3-super-120b-a12b for the agent loop."
 TASK_A_NOTES = "Agent tried to call tools the context but incrorectly, so we could tool calls as a JSON text blob in a single message instead of actually executing them"
 
 # ── Task B ─────────────────────────────────────────────────────────────────
+#
+# The scaffold ships with a working generate_event_flyer that has two paths:
+#
+#   - Live mode: if FLYER_IMAGE_MODEL is set in .env, the tool calls that
+#     model and returns a real image URL.
+#   - Placeholder mode: otherwise (the default) the tool returns a
+#     deterministic placehold.co URL with mode="placeholder".
+#
+# Both paths return success=True. Both count as "implemented" for grading.
+# This is not the original Task B — the original asked you to write a direct
+# FLUX image call, but Nebius removed FLUX on 2026-04-13. See CHANGELOG.md
+# §Changed for why we pivoted the task.
 
-# Has generate_event_flyer been implemented (not just the stub)?
+# Did your run of the flyer tool produce a success=True result?
+# (This will be True for both live and placeholder mode — both are valid.)
 TASK_B_IMPLEMENTED = True   # True or False
 
-# The image URL returned (or the error message if still a stub).
-TASK_B_IMAGE_URL_OR_ERROR = "https://pictures-storage.storage.eu-north1.nebius.cloud/text2img-3dfd80f8-e0bd-43b9-995e-39ff51fb9077_00001_.webp"
+# Which path did your run take? "live" or "placeholder"
+# Look for the "mode" field in the TOOL_RESULT output of Task B.
+# If you didn't set FLYER_IMAGE_MODEL in .env, you will get "placeholder".
+TASK_B_MODE = "live"
+
+# The image URL returned by the tool. Copy exactly from your terminal output.
+# In placeholder mode this will be a placehold.co URL.
+# In live mode it will be a provider CDN URL.
+TASK_B_IMAGE_URL = "https://pictures-storage.storage.eu-north1.nebius.cloud/text2img-3dfd80f8-e0bd-43b9-995e-39ff51fb9077_00001_.webp"
 
 # The prompt sent to the image model. Copy from terminal output.
 TASK_B_PROMPT_USED = "Professional event flyer for Edinburgh AI Meetup, tech professionals, modern venue at The Haymarket Vaults, Edinburgh. 160 guests tonight. Warm lighting, Scottish architecture background, clean modern typography."
+
+# Why did the agent's behaviour NOT change when Nebius removed FLUX?
+# One sentence. This is the point of the lesson.
+TASK_B_WHY_AGENT_SURVIVED = """
+FILL ME IN
+"""
 
 # ── Task C ─────────────────────────────────────────────────────────────────
 
@@ -90,7 +119,7 @@ graph TD;
 	classDef last fill:#bfb6fc
 """
 
-# Compare the LangGraph graph to exercise3_rasa/data/rules.yml. Min 30 words.
+# Compare the LangGraph graph to exercise3_rasa/data/flows.yml. Min 30 words.
 TASK_D_COMPARISON = """
 "The main difference is that in LangGraph the LLM has full control over every step, while with Rasa each scenario is deterministically defined, which makes it much more robust for known scenarios.
 """
