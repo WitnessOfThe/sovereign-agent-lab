@@ -11,23 +11,29 @@ Run `python grade.py ex2` to check for obvious issues.
 # Look at [TOOL_CALL] lines in your terminal output.
 # Example: ["check_pub_availability", "get_edinburgh_weather"]
 
-TASK_A_TOOLS_CALLED = []
+TASK_A_TOOLS_CALLED = [
+    "check_pub_availability",
+    "check_pub_availability",
+    "calculate_catering_cost",
+    "get_edinburgh_weather",
+    "generate_event_flyer",
+]
 
 # Which venue did the agent confirm? Must be one of:
 # "The Albanach", "The Haymarket Vaults", or "none"
-TASK_A_CONFIRMED_VENUE = "none"
+TASK_A_CONFIRMED_VENUE = "The Albanach"
 
 # Total catering cost the agent calculated. Float, e.g. 5600.0
 # Write 0.0 if the agent didn't calculate it.
-TASK_A_CATERING_COST_GBP = 0.0
+TASK_A_CATERING_COST_GBP = 5600.0
 
 # Did the weather tool return outdoor_ok = True or False?
-TASK_A_OUTDOOR_OK = None
+TASK_A_OUTDOOR_OK = False
 
 # Optional — anything unexpected.
 # If you used a non-default model via RESEARCH_MODEL env var, note it here.
 # Example: "Used nvidia/nemotron-3-super-120b-a12b for the agent loop."
-TASK_A_NOTES = "Agent tried to call tools the context but incrorectly, so we could tool calls as a JSON text blob in a single message instead of actually executing them"
+TASK_A_NOTES = "The agent issued both check_pub_availability calls in parallel (same LLM turn, two tool calls before any results returned). Both venues met constraints; the agent chose The Albanach for catering and flyer. Weather returned outdoor_ok=False (10.9°C, Overcast) — outdoor drinks not recommended."
 
 # ── Task B ─────────────────────────────────────────────────────────────────
 #
@@ -50,12 +56,12 @@ TASK_B_IMPLEMENTED = True   # True or False
 # Which path did your run take? "live" or "placeholder"
 # Look for the "mode" field in the TOOL_RESULT output of Task B.
 # If you didn't set FLYER_IMAGE_MODEL in .env, you will get "placeholder".
-TASK_B_MODE = "live"
+TASK_B_MODE = "placeholder"
 
 # The image URL returned by the tool. Copy exactly from your terminal output.
 # In placeholder mode this will be a placehold.co URL.
 # In live mode it will be a provider CDN URL.
-TASK_B_IMAGE_URL = "https://pictures-storage.storage.eu-north1.nebius.cloud/text2img-3dfd80f8-e0bd-43b9-995e-39ff51fb9077_00001_.webp"
+TASK_B_IMAGE_URL = "https://placehold.co/1200x628/1a1a2e/eaeaea?text=The+Haymarket+Vaults+%7C+160+guests&id=2ef939fbbaf6"
 
 # The prompt sent to the image model. Copy from terminal output.
 TASK_B_PROMPT_USED = "Professional event flyer for Edinburgh AI Meetup, tech professionals, modern venue at The Haymarket Vaults, Edinburgh. 160 guests tonight. Warm lighting, Scottish architecture background, clean modern typography."
@@ -63,7 +69,7 @@ TASK_B_PROMPT_USED = "Professional event flyer for Edinburgh AI Meetup, tech pro
 # Why did the agent's behaviour NOT change when Nebius removed FLUX?
 # One sentence. This is the point of the lesson.
 TASK_B_WHY_AGENT_SURVIVED = """
-FILL ME IN
+The agent's control flow was unaffected because generate_event_flyer encapsulates the provider dependency and always returns success=True with a structured result — the agent receives the same message shape regardless of whether a live image model is available or not.
 """
 
 # ── Task C ─────────────────────────────────────────────────────────────────
@@ -71,7 +77,7 @@ FILL ME IN
 # Scenario 1: first choice unavailable
 # Quote the specific message where the agent changed course. Min 20 words.
 SCENARIO_1_PIVOT_MOMENT = """
-The tool result not a message: '{"pub_name": "The Bow Bar", "capacity": 80, "status": "full", "meets_all_constraints": false}' triggered the pivot. The agent produced no explicit reasoning message — it silently moved to the next candidate and called check_pub_availability for The Haymarket Vaults with required_capacity=160 and requires_vegan=true.
+The tool result, not a spoken message, triggered the pivot: '{"pub_name": "The Bow Bar", "capacity": 80, "status": "full", "meets_all_constraints": false}'. The agent produced no explicit reasoning step — it silently moved to the next candidate and immediately called check_pub_availability for The Albanach with required_capacity=160 and requires_vegan=true.
 """
 
 SCENARIO_1_FALLBACK_VENUE = "The Albanach"
@@ -89,11 +95,18 @@ None of the known venues meet the capacity and dietary requirements. The Albanac
 # Did the agent try to call a tool?
 SCENARIO_3_TRIED_A_TOOL = False   # True or False
 
-SCENARIO_3_RESPONSE = "Your input is lacking necessary details. Please provide more information or specify the task you need help with."
+SCENARIO_3_RESPONSE = """
+I don't have access to real-time train schedules or transportation data. For the most accurate information about the last train from Edinburgh Waverley to London, I recommend checking:
+1. The ScotRail website/app
+2. National Rail Enquiries (www.nationalrail.co.uk)
+3. Train service operator's official platform
+
+Would you like help with anything related to Edinburgh pubs, weather, event planning, or catering calculations?
+"""
 
 # Would this behaviour be acceptable in a real booking assistant? Min 30 words.
 SCENARIO_3_ACCEPTABLE = """
-Instead of clearly telling the user it cannot help with train times, the agent responded with a vague "lacking necessary details" message, which is confusing. We expect clear denial if this type of service is unavailable 
+Yes, this behaviour is acceptable and well-handled. The agent clearly acknowledged it has no tool for train times, did not attempt a spurious tool call, and directed the user to appropriate external resources while offering to resume within its actual scope.
 """
 
 # ── Task D ─────────────────────────────────────────────────────────────────
@@ -121,7 +134,7 @@ graph TD;
 
 # Compare the LangGraph graph to exercise3_rasa/data/flows.yml. Min 30 words.
 TASK_D_COMPARISON = """
-"The main difference is that in LangGraph the LLM has full control over every step, while with Rasa each scenario is deterministically defined, which makes it much more robust for known scenarios.
+The main difference is that in LangGraph the LLM has full control over every step — the graph has a single agent node that loops through a tools node at runtime, with no pre-defined paths. Rasa CALM's flows.yml is the opposite: every task is an explicit named flow with ordered steps the LLM simply selects from, making known scenarios far more predictable and auditable at the cost of flexibility.
 """
 
 # ── Reflection ─────────────────────────────────────────────────────────────
@@ -130,5 +143,5 @@ TASK_D_COMPARISON = """
 # Must reference a specific behaviour from your run.
 
 MOST_SURPRISING = """
-In Task A, the agent typed all five tool calls as a single json text blob without any results, which a bit odd and suggest agent misconfiguration. Also, the agent forgetting that it can't do the train times and suggesting to add extra details.
+In Task A, the agent issued both check_pub_availability calls in a single LLM turn (parallel tool calls) before receiving any results — it committed to checking both venues simultaneously rather than waiting to see if the first one passed. This is emergent batching behaviour: the model inferred from the prompt that both checks were independent and could proceed concurrently, which is efficient but means it cannot short-circuit on the first success.
 """
